@@ -1,0 +1,81 @@
+{
+  "paragraphs": [
+    {
+      "text": "%sh\n# Download the book from Project Gutenberg\nwget -O pride_and_prejudice.txt https://www.gutenberg.org/files/1342/1342-0.txt\n\n# Upload the book to HDFS\nhdfs dfs -put pride_and_prejudice.txt /user/root/\n\n# Display the first few lines of the file in HDFS\nhdfs dfs -head /user/root/pride_and_prejudice.txt",
+      "user": "anonymous",
+      "dateUpdated": "2023-05-10T12:00:00+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "sh",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/sh"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1683720000000_1234567890",
+      "id": "paragraph_1683720000000_1234567890",
+      "dateCreated": "2023-05-10T12:00:00+0000",
+      "status": "READY"
+    },
+    {
+      "text": "%sh\n# Create a MapReduce job for word count\ncat << EOF > WordCount.java\nimport java.io.IOException;\nimport java.util.StringTokenizer;\n\nimport org.apache.hadoop.conf.Configuration;\nimport org.apache.hadoop.fs.Path;\nimport org.apache.hadoop.io.IntWritable;\nimport org.apache.hadoop.io.Text;\nimport org.apache.hadoop.mapreduce.Job;\nimport org.apache.hadoop.mapreduce.Mapper;\nimport org.apache.hadoop.mapreduce.Reducer;\nimport org.apache.hadoop.mapreduce.lib.input.FileInputFormat;\nimport org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;\n\npublic class WordCount {\n\n  public static class TokenizerMapper\n       extends Mapper<Object, Text, Text, IntWritable>{\n\n    private final static IntWritable one = new IntWritable(1);\n    private Text word = new Text();\n\n    public void map(Object key, Text value, Context context\n                    ) throws IOException, InterruptedException {\n      StringTokenizer itr = new StringTokenizer(value.toString());\n      while (itr.hasMoreTokens()) {\n        word.set(itr.nextToken().replaceAll(\"[^a-zA-Z]\", \"\").toLowerCase());\n        if (word.getLength() > 0) {\n          context.write(word, one);\n        }\n      }\n    }\n  }\n\n  public static class IntSumReducer\n       extends Reducer<Text,IntWritable,Text,IntWritable> {\n    private IntWritable result = new IntWritable();\n\n    public void reduce(Text key, Iterable<IntWritable> values,\n                       Context context\n                       ) throws IOException, InterruptedException {\n      int sum = 0;\n      for (IntWritable val : values) {\n        sum += val.get();\n      }\n      result.set(sum);\n      context.write(key, result);\n    }\n  }\n\n  public static void main(String[] args) throws Exception {\n    Configuration conf = new Configuration();\n    Job job = Job.getInstance(conf, \"word count\");\n    job.setJarByClass(WordCount.class);\n    job.setMapperClass(TokenizerMapper.class);\n    job.setCombinerClass(IntSumReducer.class);\n    job.setReducerClass(IntSumReducer.class);\n    job.setOutputKeyClass(Text.class);\n    job.setOutputValueClass(IntWritable.class);\n    FileInputFormat.addInputPath(job, new Path(args[0]));\n    FileOutputFormat.setOutputPath(job, new Path(args[1]));\n    System.exit(job.waitForCompletion(true) ? 0 : 1);\n  }\n}\nEOF\n\n# Compile the Java code\njavac -classpath $(hadoop classpath) WordCount.java\n\n# Create a JAR file\njar cf wc.jar WordCount*.class\n\n# Run the MapReduce job\nhadoop jar wc.jar WordCount /user/root/pride_and_prejudice.txt /user/root/output\n\n# Display the results (top 20 words)\nhdfs dfs -cat /user/root/output/part-r-00000 | sort -k2 -nr | head -n 20",
+      "user": "anonymous",
+      "dateUpdated": "2023-05-10T12:00:00+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "sh",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/sh"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1683720000001_1234567891",
+      "id": "paragraph_1683720000001_1234567891",
+      "dateCreated": "2023-05-10T12:00:00+0000",
+      "status": "READY"
+    }
+  ],
+  "name": "Gutenberg Word Count (Hadoop)",
+  "id": "2J3XXXXXY",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false,
+    "looknfeel": "default",
+    "personalizedMode": "false"
+  },
+  "info": {}
+}

@@ -1,0 +1,81 @@
+{
+  "paragraphs": [
+    {
+      "text": "%spark\n\n// Import necessary libraries\nimport org.apache.spark.sql.functions._\nimport scala.io.Source\nimport java.net.URL\n\n// Function to download text from a URL\ndef downloadText(url: String): String = {\n  val source = Source.fromURL(url)\n  val text = source.mkString\n  source.close()\n  text\n}\n\n// Download a book from Project Gutenberg (let's use \"Pride and Prejudice\" by Jane Austen)\nval bookUrl = \"https://www.gutenberg.org/files/1342/1342-0.txt\"\nval bookText = downloadText(bookUrl)\n\n// Create a DataFrame from the book text\nval bookDF = spark.createDataFrame(Seq((bookText))).toDF(\"text\")\n\n// Split the text into words, convert to lowercase, and remove punctuation\nval wordsDF = bookDF\n  .select(explode(split(lower(col(\"text\")), \"\\\\s+\")).alias(\"word\"))\n  .filter(length(col(\"word\")) > 0)\n  .withColumn(\"word\", regexp_replace(col(\"word\"), \"[^a-z]\", \"\"))\n  .filter(length(col(\"word\")) > 0)\n\n// Perform word count\nval wordCountDF = wordsDF\n  .groupBy(\"word\")\n  .count()\n  .orderBy(desc(\"count\"))\n\n// Show the top 20 most frequent words\nwordCountDF.show(20)\n\n// Create a temporary view for SQL queries\nwordCountDF.createOrReplaceTempView(\"word_counts\")",
+      "user": "anonymous",
+      "dateUpdated": "2023-05-10T12:00:00+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1683720000000_1234567890",
+      "id": "paragraph_1683720000000_1234567890",
+      "dateCreated": "2023-05-10T12:00:00+0000",
+      "status": "READY"
+    },
+    {
+      "text": "%sql\nSELECT * FROM word_counts WHERE length(word) > 3 ORDER BY count DESC LIMIT 20",
+      "user": "anonymous",
+      "dateUpdated": "2023-05-10T12:00:00+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1683720000001_1234567891",
+      "id": "paragraph_1683720000001_1234567891",
+      "dateCreated": "2023-05-10T12:00:00+0000",
+      "status": "READY"
+    }
+  ],
+  "name": "Gutenberg Word Count (Spark)",
+  "id": "2J3XXXXXZ",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false,
+    "looknfeel": "default",
+    "personalizedMode": "false"
+  },
+  "info": {}
+}
