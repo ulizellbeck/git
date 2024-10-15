@@ -1,0 +1,155 @@
+{
+  "paragraphs": [
+    {
+      "text": "%pyspark\n# Importieren der benötigten Bibliotheken\nfrom pyspark import SparkContext\nfrom pyspark.sql import SparkSession\nimport re\nimport operator\n\n# Initialisieren der SparkSession\nspark = SparkSession.builder.appName(\"WordCountRDD\").getOrCreate()\nsc = spark.sparkContext",
+      "user": "anonymous",
+      "dateUpdated": "2023-06-01T00:00:00+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1685577600000_1234567890",
+      "id": "paragraph_1685577600000_1234567890",
+      "dateCreated": "2023-06-01T00:00:00+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:1234"
+    },
+    {
+      "text": "%pyspark\n# Erstellen einer RDD aus einer Liste von Wörtern\nwordsList = ['cat', 'elephant', 'rat', 'rat', 'cat']\nwordsRDD = sc.parallelize(wordsList, 4)\n# Print out the type of wordsRDD\nprint(type(wordsRDD))",
+      "user": "anonymous",
+      "dateUpdated": "2023-06-01T00:00:00+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1685577600001_1234567891",
+      "id": "paragraph_1685577600001_1234567891",
+      "dateCreated": "2023-06-01T00:00:00+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:1235"
+    },
+    {
+      "text": "%pyspark\ndef makePlural(word):\n    \"\"\"Adds an 's' to `word`.\n\n    Args:\n        word (str): A string.\n\n    Returns:\n        str: A string with 's' added to it.\n    \"\"\"\n    return word + 's'\n\nprint(makePlural('cat'))",
+      "user": "anonymous",
+      "dateUpdated": "2023-06-01T00:00:00+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1685577600002_1234567892",
+      "id": "paragraph_1685577600002_1234567892",
+      "dateCreated": "2023-06-01T00:00:00+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:1236"
+    },
+    {
+      "text": "%pyspark\n# TODO: Replace <FILL IN> with appropriate code\npluralRDD = wordsRDD.map(makePlural)\nprint(pluralRDD.collect())",
+      "user": "anonymous",
+      "dateUpdated": "2023-06-01T00:00:00+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1685577600003_1234567893",
+      "id": "paragraph_1685577600003_1234567893",
+      "dateCreated": "2023-06-01T00:00:00+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:1237"
+    }
+  ],
+  "name": "cs110_lab3a_word_count_rdd",
+  "id": "2J3ABCDEF",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false,
+    "looknfeel": "default",
+    "personalizedMode": "false"
+  },
+  "info": {}
+}

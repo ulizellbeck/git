@@ -8,12 +8,23 @@ services:
     ports:
       - 9870:9870
       - 9000:9000
+      - 50070:50070
     volumes:
       - hadoop_namenode:/hadoop/dfs/name
     environment:
       - CLUSTER_NAME=test
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - CORE_CONF_hadoop_http_staticuser_user=root
+      - HDFS_CONF_dfs_webhdfs_enabled=true
+      - HDFS_CONF_dfs_permissions_enabled=false
+      - HDFS_CONF_dfs_namenode_http_address=0.0.0.0:50070
+      - HDFS_CONF_dfs_http_address=0.0.0.0:50070
+      - HDFS_CONF_dfs_namenode_safemode_threshold_pct=0
+
     env_file:
       - ./hadoop.env
+    networks:
+      - hadoop_network
 
   datanode:
     image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
@@ -21,10 +32,18 @@ services:
     restart: always
     volumes:
       - hadoop_datanode:/hadoop/dfs/data
+    ports:
+      - 9864:9864
     environment:
-      SERVICE_PRECONDITION: "namenode:9870"
+      CORE_CONF_fs_defaultFS: hdfs://namenode:9000
+      CORE_CONF_hadoop_http_staticuser_user: root
+      HDFS_CONF_dfs_datanode_address: 0.0.0.0:9866
+      HDFS_CONF_dfs_datanode_http_address: 0.0.0.0:9864
+      HDFS_CONF_dfs_datanode_ipc_address: 0.0.0.0:9867
     env_file:
       - ./hadoop.env
+    networks:
+      - hadoop_network
 
   resourcemanager:
     image: bde2020/hadoop-resourcemanager:2.0.0-hadoop3.2.1-java8
@@ -34,8 +53,11 @@ services:
       - 8088:8088
     environment:
       SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864"
+      CORE_CONF_fs_defaultFS: hdfs://namenode:9000
     env_file:
       - ./hadoop.env
+    networks:
+      - hadoop_network
 
   nodemanager:
     image: bde2020/hadoop-nodemanager:2.0.0-hadoop3.2.1-java8
@@ -43,23 +65,33 @@ services:
     restart: always
     environment:
       SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864 resourcemanager:8088"
+      CORE_CONF_fs_defaultFS: hdfs://namenode:9000
     env_file:
       - ./hadoop.env
+    networks:
+      - hadoop_network
 
   zeppelin:
-    image: apache/zeppelin:0.10.0
+    image: bde2020/zeppelin:latest
     container_name: zeppelin
     ports:
       - 8080:8080
     volumes:
       - ./zeppelin/logs:/logs
       - ./zeppelin/notebook:/notebook
-      - ./zeppelin/gutenberg_wordcount_hadoop.json:/notebook/gutenberg_wordcount_hadoop.json
     environment:
       - ZEPPELIN_LOG_DIR=/logs
       - ZEPPELIN_NOTEBOOK_DIR=/notebook
       - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - ZEPPELIN_NOTEBOOK_STORAGE=org.apache.zeppelin.notebook.repo.VFSNotebookRepo
+#    user: "1000:1000"  # Use the appropriate user:group ID
+    networks:
+      - hadoop_network
 
 volumes:
   hadoop_namenode:
   hadoop_datanode:
+
+networks:
+  hadoop_network:
+    driver: bridge

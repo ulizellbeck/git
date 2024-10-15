@@ -19,14 +19,14 @@ services:
       - SPARK_MASTER=spark://spark-master:7077
 
   zeppelin:
-    image: apache/zeppelin:0.10.0
+    image: bde2020/zeppelin:latest
     container_name: zeppelin
     ports:
       - 8090:8080
     volumes:
       - ./zeppelin/logs:/logs
       - ./zeppelin/notebook:/notebook
-      - ./zeppelin/gutenberg_wordcount_spark.json:/notebook/gutenberg_wordcount_spark.json
+      #- ./zeppelin/gutenberg_wordcount_spark.json:/notebook/gutenberg_wordcount_spark.json
     environment:
       - ZEPPELIN_LOG_DIR=/logs
       - ZEPPELIN_NOTEBOOK_DIR=/notebook

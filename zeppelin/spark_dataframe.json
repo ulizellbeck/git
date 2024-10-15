@@ -1,0 +1,82 @@
+{"paragraphs":[
+  {
+    "text": "%pyspark\n# Importieren der benötigten Bibliotheken\nfrom pyspark.sql import SparkSession\nfrom pyspark.sql.functions import col, length, explode, split\n\n# Initialisieren der SparkSession\nspark = SparkSession.builder.appName(\"WordCountDataFrame\").getOrCreate()",
+    "user": "anonymous",
+    "dateUpdated": "2024-10-15T20:40:00+0000",
+    "config": {
+      "editorSetting": {"language": "python", "editOnDblClick": false, "completionKey": "TAB", "completionSupport": true},
+      "colWidth": 12,
+      "editorMode": "ace/mode/python",
+      "fontSize": 9,
+      "results": {},
+      "enabled": true
+    },
+    "settings": {"params": {}, "forms": {}},
+    "results": {"code": "SUCCESS", "msg": []}
+  },
+  {
+    "text": "%pyspark\n### Erstellen eines Basis-DataFrames\n# Wir beginnen mit der Erzeugung eines Basis-DataFrames mit Hilfe einer Python-Liste\nwordsList = ['cat', 'elephant', 'rat', 'rat', 'cat']\nwordsDF = spark.createDataFrame([(word,) for word in wordsList], ['word'])\n\n# Print out the type of wordsDF\nprint(type(wordsDF))\n\n# Show the DataFrame\nwordsDF.show()",
+    "user": "anonymous",
+    "dateUpdated": "2024-10-15T20:40:00+0000",
+    "config": {
+      "editorSetting": {"language": "python", "editOnDblClick": false, "completionKey": "TAB", "completionSupport": true},
+      "colWidth": 12,
+      "editorMode": "ace/mode/python",
+      "fontSize": 9,
+      "results": {},
+      "enabled": true
+    },
+    "settings": {"params": {}, "forms": {}},
+    "results": {"code": "SUCCESS", "msg": []}
+  },
+  {
+    "text": "%pyspark\n# Hinzufügen des Buchstabens 's' zu jedem Wort\npluralDF = wordsDF.withColumn('plural', col('word') + 's')\n\nprint(\"DataFrame mit Pluralformen:\")\npluralDF.show()",
+    "user": "anonymous",
+    "dateUpdated": "2024-10-15T20:40:00+0000",
+    "config": {
+      "editorSetting": {"language": "python", "editOnDblClick": false, "completionKey": "TAB", "completionSupport": true},
+      "colWidth": 12,
+      "editorMode": "ace/mode/python",
+      "fontSize": 9,
+      "results": {},
+      "enabled": true
+    },
+    "settings": {"params": {}, "forms": {}},
+    "results": {"code": "SUCCESS", "msg": []}
+  },
+  {
+    "text": "%pyspark\n# Berechnung der Länge des Wortes\nlengthDF = pluralDF.withColumn('length', length(col('plural')))\n\nprint(\"DataFrame mit Wortlängen:\")\nlengthDF.show()",
+    "user": "anonymous",
+    "dateUpdated": "2024-10-15T20:40:00+0000",
+    "config": {
+      "editorSetting": {"language": "python", "editOnDblClick": false, "completionKey": "TAB", "completionSupport": true},
+      "colWidth": 12,
+      "editorMode": "ace/mode/python",
+      "fontSize": 9,
+      "results": {},
+      "enabled": true
+    },
+    "settings": {"params": {}, "forms": {}},
+    "results": {"code": "SUCCESS", "msg": []}
+  },
+  {
+    "text": "%pyspark\n# Beispiel für eine komplexere Transformation: Wörter zählen\nwordCountDF = (wordsDF\n    .groupBy('word')\n    .count()\n    .orderBy('count', ascending=False)\n)\n\nprint(\"Wortzählung:\")\nwordCountDF.show()",
+    "user": "anonymous",
+    "dateUpdated": "2024-10-15T20:40:00+0000",
+    "config": {
+      "editorSetting": {"language": "python", "editOnDblClick": false, "completionKey": "TAB", "completionSupport": true},
+      "colWidth": 12,
+      "editorMode": "ace/mode/python",
+      "fontSize": 9,
+      "results": {},
+      "enabled": true
+    },
+    "settings": {"params": {}, "forms": {}},
+    "results": {"code": "SUCCESS", "msg": []}
+  }
+],
+"name": "cs110_lab3a_word_count_dataframe",
+"id": "2K9ACVGTV",
+"angularObjects": {},
+"config": {"looknfeel": "default", "personalizedMode": "false"},
+"info": {}}
