@@ -1,0 +1,4 @@
+https://github.com/ozlerhakan/mongodb-json-files/tree/master/datasets
+
+https://github.com/ozlerhakan/mongodb-json-files/blob/master/datasets/city_inspections.json
+https://github.com/ozlerhakan/mongodb-json-files/blob/master/datasets/companies.json
